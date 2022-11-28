@@ -1,41 +1,24 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <div v-for="post in storedPosts"  :key="post.id">
-      {{ post.title }}
-    </div>
-  </div>
+  <posts />
 </template>
 
 <script>
 // @ is an alias to /src
+import Posts from '@/components/posts/list.vue';
 
 export default {
   name: 'HomeView',
   data() {
     return {
-      posts: [],
     }
   },
   components: {
+    Posts
   },
-  computed: {
-    storedPosts() {
-      return this.$store.state.posts.items
-    },
-  },
-  methods: {
-    getPosts() {
-      this.axios.get('https://jsonplaceholder.typicode.com/posts').then((response) => {
-        this.posts = response.data;
-        this.$store.commit('SET_POSTS', this.posts);
-      })
-    },
-  },
-  mounted() {
-    if(this.posts.length === 0) {
-      this.getPosts();
-    }
-  }
+    mounted() {
+      if(this.$store.state.posts.items.length === 0) {
+        this.$store.dispatch('getPosts')
+      }
+    },                   
 }
 </script>
